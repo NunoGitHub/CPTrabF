@@ -16,17 +16,17 @@ int main()
     /*FILE *fp;
     //fp = fopen("/home/np/Desktop/mestrado/Computação Paralela/trabf/trabf/2.bmp" ,"w");
     */
-    char * ola = malloc(sizeof (fptr) );
+    unsigned char * ola = malloc( length*sizeof (fptr) );
+
 
     for(int i = 0; i < length; i++){
-        *(ola+i) = (char)malloc(4*sizeof (fgetc(fptr)) );
-        fputc(fgetc(fptr), *(ola+i));
-        printf("%c", *(ola+i));
+        *(ola+i) = (unsigned char)malloc(sizeof (fgetc(fptr)) );
+        //fputc(fgetc(fptr), (unsigned char) ola[i]);
+        ola[i]=fgetc(fptr);
+        printf("%c", ola[i]);
     }
-    printf("c%",ola);
     /*fclose(fp);*/
     fclose(fptr);
 
-    int a=0;
     return 0;
 }
