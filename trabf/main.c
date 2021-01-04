@@ -13,19 +13,13 @@ int main()
     fseek(fptr, 0, SEEK_END);
     int length = ftell(fptr);
     fseek(fptr, 0, SEEK_SET);
-    /*FILE *fp;
-    //fp = fopen("/home/np/Desktop/mestrado/Computação Paralela/trabf/trabf/2.bmp" ,"w");
-    */
     unsigned char * ola = malloc( length*sizeof (fptr) );
-
-
     for(int i = 0; i < length; i++){
         *(ola+i) = (unsigned char)malloc(sizeof (fgetc(fptr)) );
         //fputc(fgetc(fptr), (unsigned char) ola[i]);
         ola[i]=fgetc(fptr);
         printf("%c", ola[i]);
     }
-    /*fclose(fp);*/
     fclose(fptr);
 
     return 0;
