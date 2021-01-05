@@ -39,7 +39,7 @@ void ReadImage(const char *fileName,byte **pixels, int32 *width, int32 *height, 
         byte *currentRowPointer = *pixels+((*height-1)*unpaddedRowSize);
         for (i = 0; i < *height; i++)
         {
-                fseek(imageFile, dataOffset+(i*paddedRowSize), SEEK_SET);
+            fseek(imageFile, dataOffset+(i*paddedRowSize), SEEK_SET);
             fread(currentRowPointer, 1, unpaddedRowSize, imageFile);
             currentRowPointer -= unpaddedRowSize;
         }
@@ -53,7 +53,7 @@ void test()
     int32 width;
     int32 height;
     int32 bytesPerPixel;
-    ReadImage("/home/rui/Desktop/king.bmp", &pixels, &width, &height,&bytesPerPixel);
+    ReadImage("/home/np/Desktop/mestrado/Computação Paralela/trabf/trabf/1.bmp", &pixels, &width, &height,&bytesPerPixel);
 
     printf("%d\n",width);
     printf("%d\n",height);
@@ -62,6 +62,7 @@ void test()
 
 int main()
 {
+    test();
     FILE *fptr;
     fptr = fopen("/home/np/Desktop/mestrado/Computação Paralela/trabf/trabf/1.bmp","r");
     if(fptr == NULL)
