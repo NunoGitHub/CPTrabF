@@ -15,72 +15,101 @@
 typedef unsigned int int32;
 typedef short int16;
 typedef unsigned char byte;
+struct Matrix{
+    byte *bgr;
+};
+typedef struct Matrix Matrix;
+
+struct Pixel{
+    Matrix **matrix;
+}pixel;
+
+
 
 void ReadImage(const char *fileName,byte **pixels, int32 *width, int32 *height, int32 *bytesPerPixel)
 {
-        FILE *imageFile = fopen(fileName, "rb");
-        int32 dataOffset;
-        fseek(imageFile, DATA_OFFSET_OFFSET, SEEK_SET);
-        fread(&dataOffset, 4, 1, imageFile);
-        fseek(imageFile, WIDTH_OFFSET, SEEK_SET);
-        fread(width, 4, 1, imageFile);
-        fseek(imageFile, HEIGHT_OFFSET, SEEK_SET);
-        fread(height, 4, 1, imageFile);
-        int16 bitsPerPixel;
-        fseek(imageFile, BITS_PER_PIXEL_OFFSET, SEEK_SET);
-        fread(&bitsPerPixel, 2, 1, imageFile);
-        *bytesPerPixel = ((int32)bitsPerPixel) / 8;
+    FILE *imageFile = fopen(fileName, "rb");
+    int32 dataOffset;
+    fseek(imageFile, DATA_OFFSET_OFFSET, SEEK_SET);
+    fread(&dataOffset, 4, 1, imageFile);
+    fseek(imageFile, WIDTH_OFFSET, SEEK_SET);
+    fread(width, 4, 1, imageFile);
+    fseek(imageFile, HEIGHT_OFFSET, SEEK_SET);
+    fread(height, 4, 1, imageFile);
+    int16 bitsPerPixel;
+    fseek(imageFile, BITS_PER_PIXEL_OFFSET, SEEK_SET);
+    fread(&bitsPerPixel, 2, 1, imageFile);
+    *bytesPerPixel = ((int32)bitsPerPixel) / 8;
 
-        int paddedRowSize = (int)(4 * ceil((float)(*width) / 4.0f))*(*bytesPerPixel);
-        int unpaddedRowSize = (*width)*(*bytesPerPixel);
-        int totalSize = unpaddedRowSize*(*height);
-        *pixels = (byte*)malloc(totalSize);
-        int i = 0;
-        byte *currentRowPointer = *pixels+((*height-1)*unpaddedRowSize);
-        for (i = 0; i < *height; i++)
-        {
-            fseek(imageFile, dataOffset+(i*paddedRowSize), SEEK_SET);
-            fread(currentRowPointer, 1, unpaddedRowSize, imageFile);
-            currentRowPointer -= unpaddedRowSize;
-        }
+    int paddedRowSize = 4 * (*width) * (*height);//(int)(4 * ceil((float)(*width) / 4.0f))*(*bytesPerPixel);
 
-        fclose(imageFile);
-}
 
-void test()
-{
-    byte *pixels;
-    int32 width;
-    int32 height;
-    int32 bytesPerPixel;
-    ReadImage("/home/np/Desktop/mestrado/Computação Paralela/trabf/trabf/1.bmp", &pixels, &width, &height,&bytesPerPixel);
+    fclose(imageFile);
 
-    printf("%d\n",width);
-    printf("%d\n",height);
-    printf("%d\n",bytesPerPixel);
 }
 
 int main()
 {
-    test();
+    // test();
+    byte *pixels;
+    int32 width;
+    int32 height;
+    int32 bytesPerPixel;
+    ReadImage("/home/np/Desktop/mestrado/trabf/trabf/1.bmp", &pixels, &width, &height,&bytesPerPixel);
+
     FILE *fptr;
-    fptr = fopen("/home/np/Desktop/mestrado/Computação Paralela/trabf/trabf/1.bmp","r");
+    fptr = fopen("/home/np/Desktop/mestrado/trabf/trabf/1.bmp","r");
     if(fptr == NULL)
-      {
-         printf("Error!");
-         //exit(1);
-      }
+    {
+        printf("Error!");
+        //exit(1);
+    }
+
+    pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*height);
+    for (int i = 0; i < height; i++)
+    {
+        pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*width);
+        for (int j = 0; j <(int) width; j++){
+            pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*3));
+            for(int k = 0; k < 3; k++){
+
+                pixel.matrix[i][j].bgr[k]=0;
+
+            }
+
+        }
+    }
     fseek(fptr, 0, SEEK_END);
     int length = ftell(fptr);
     fseek(fptr, 0, SEEK_SET);
-    unsigned char * ola = malloc( length*sizeof (fptr) );
-    for(int i = 0; i < length; i++){
-        *(ola+i) = (unsigned char)malloc(sizeof (fgetc(fptr)) );
-        //fputc(fgetc(fptr), (unsigned char) ola[i]);
-        ola[i]=fgetc(fptr);
-        printf("%c", ola[i]);
+    unsigned char header[54]={0};
+    for (int h =0;h<54;h++){
+        header[h]=fgetc(fptr);
+    }
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++){
+
+            for(int k = 0; k < 3; k++){
+                pixel.matrix[i][j].bgr[k]=fgetc(fptr);
+            }
+
+        }
     }
     fclose(fptr);
+    int size=  height * width * 4;
+    FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/32bit.bmp", "wb");
+    fwrite(header, 1, 54, fout);
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++){
+
+            fwrite( (const void*)pixel.matrix[i][j].bgr, 1, sizeof (byte)*3, fout);
+        }
+    }
+    fclose(fout);
+
 
     return 0;
 }

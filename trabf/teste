@@ -1,0 +1,12 @@
+pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*height);
+/*for (int i = 0; i < height; i++)
+{
+      pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*width);
+    for (int j = 0; j < width; j++){
+        for(int k = 0; k < 3; k++){
+           // *(*( pixel.matrix+i)+j) =(Matrix**)malloc(sizeof (Matrix));
+            pixel.matrix[i][j].bgr[k]=0;
+        }
+
+    }
+}*/

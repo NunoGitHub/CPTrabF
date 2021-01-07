@@ -211,6 +211,7 @@ DIST          = /home/np/Qt/5.12.10/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/qt_config.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/spec_post.prf \
+		../trabf/.qmake.stash \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/toolchain.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/default_pre.prf \
@@ -393,6 +394,7 @@ Makefile: ../trabf/trabf.pro /home/np/Qt/5.12.10/gcc_64/mkspecs/linux-g++/qmake.
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/qt_config.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/toolchain.prf \
 		/home/np/Qt/5.12.10/gcc_64/mkspecs/features/default_pre.prf \
@@ -565,6 +567,7 @@ Makefile: ../trabf/trabf.pro /home/np/Qt/5.12.10/gcc_64/mkspecs/linux-g++/qmake.
 /home/np/Qt/5.12.10/gcc_64/mkspecs/features/qt_config.prf:
 /home/np/Qt/5.12.10/gcc_64/mkspecs/linux-g++/qmake.conf:
 /home/np/Qt/5.12.10/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /home/np/Qt/5.12.10/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/np/Qt/5.12.10/gcc_64/mkspecs/features/toolchain.prf:
 /home/np/Qt/5.12.10/gcc_64/mkspecs/features/default_pre.prf:
