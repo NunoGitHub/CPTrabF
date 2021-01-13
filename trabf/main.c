@@ -56,10 +56,10 @@ int main()
     sharpenKernel[0][2]=0;
     // test();
     byte *pixels;
-    int32 width;
-    int32 height;
+    int32 width=272;
+    int32 height=186;
     int32 bytesPerPixel;
-    ReadImage("/home/np/Desktop/mestrado/trabf/trabf/1.bmp", &pixels, &width, &height,&bytesPerPixel);
+    //ReadImage("/home/np/Desktop/mestrado/trabf/trabf/1.bmp", &pixels, &width, &height,&bytesPerPixel);
 
     FILE *fptr;
     fptr = fopen("/home/np/Desktop/mestrado/trabf/trabf/1.bmp","r");
@@ -69,10 +69,10 @@ int main()
         //exit(1);
     }
 
-    pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*height);
+    pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*(height+1));
     for (int i = 0; i < height; i++)
     {
-        pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*width);
+        pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*(width+1));
         for (int j = 0; j <(int) width; j++){
             pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*5));
             for(int k = 0; k < 5; k++){
@@ -86,8 +86,8 @@ int main()
     fseek(fptr, 0, SEEK_END);
     int length = ftell(fptr);
     fseek(fptr, 0, SEEK_SET);
-    unsigned char header[54]={0};
-    for (int h =0;h<54;h++){
+    unsigned char header[53]={0};
+    for (int h =0;h<53;h++){
         header[h]=fgetc(fptr);
     }
 
@@ -96,7 +96,6 @@ int main()
 
     for (int i = 0; i < height; i++)
     {
-        printf("\n\n\n");
         for (int j = 0; j < width; j++){
              //fseek( fptr, sizeof (byte)*2, SEEK_SET );
 
@@ -104,9 +103,13 @@ int main()
 
 
                 pixel.matrix[i][j].bgr[k]=fgetc(fptr);//fgetc(fptr);//fgetc(fptr);//rand() % 256;
+                //pixel.matrix[i][j].bgr[0]=255;
+                //pixel.matrix[i][j].bgr[1]=0;
+               // pixel.matrix[i][j].bgr[2]=0;
 
                 //printf("%d",pixel.matrix[i][j].bgr[k]);
             }
+
 
 
 
@@ -115,7 +118,7 @@ int main()
     fclose(fptr);
     int size=  height * width * 4;
     FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/32bit.bmp", "wb");
-    fwrite(header, 1, 54, fout);
+    fwrite(header, 1, 53, fout);
     unsigned char bmppad[3] = {0,0,0};
     for (int i = 0; i < height; i++)
     {
