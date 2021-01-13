@@ -50,6 +50,10 @@ void ReadImage(const char *fileName,byte **pixels, int32 *width, int32 *height, 
 
 int main()
 {
+    int sharpenKernel[3][3];
+    sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=-5;sharpenKernel[1][2]=-1;
+    sharpenKernel[0][1]= -1;sharpenKernel[2][0]=0;sharpenKernel[2][1]=-1;sharpenKernel[2][2]=0;
+    sharpenKernel[0][2]=0;
     // test();
     byte *pixels;
     int32 width;
@@ -70,8 +74,8 @@ int main()
     {
         pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*width);
         for (int j = 0; j <(int) width; j++){
-            pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*3));
-            for(int k = 0; k < 3; k++){
+            pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*5));
+            for(int k = 0; k < 5; k++){
 
                 pixel.matrix[i][j].bgr[k]=0;
 
@@ -86,13 +90,25 @@ int main()
     for (int h =0;h<54;h++){
         header[h]=fgetc(fptr);
     }
+
+    int auxKernel[3][3];
+    int cout=0;
+
     for (int i = 0; i < height; i++)
     {
+        printf("\n\n\n");
         for (int j = 0; j < width; j++){
+             //fseek( fptr, sizeof (byte)*2, SEEK_SET );
 
-            for(int k = 0; k < 3; k++){
-                pixel.matrix[i][j].bgr[k]=fgetc(fptr);
+            for(int k = 0; k < 5; k++){
+
+
+                pixel.matrix[i][j].bgr[k]=fgetc(fptr);//fgetc(fptr);//fgetc(fptr);//rand() % 256;
+
+                //printf("%d",pixel.matrix[i][j].bgr[k]);
             }
+
+
 
         }
     }
@@ -100,12 +116,13 @@ int main()
     int size=  height * width * 4;
     FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/32bit.bmp", "wb");
     fwrite(header, 1, 54, fout);
-
+    unsigned char bmppad[3] = {0,0,0};
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++){
 
-            fwrite( (const void*)pixel.matrix[i][j].bgr, 1, sizeof (byte)*3, fout);
+            fwrite( (const void*)pixel.matrix[i][j].bgr, 1, sizeof (byte)*5, fout);
+
         }
     }
     fclose(fout);
