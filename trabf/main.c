@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define DATA_OFFSET_OFFSET 0x000A
 #define WIDTH_OFFSET 0x0032
@@ -118,12 +119,12 @@ int main()
                         if(j+kY<0) kY=0;
                         if(j+kY>= widthAux) break;
                         divider++;
-                        median+= abs(pixel.matrix[i+kX][j+kY].rgb[rgb]*sharpenKernel[kX+1][kY+1]);
+                        median+= (pixel.matrix[i+kX][j+kY].rgb[rgb]*sharpenKernel[kX+1][kY+1]);
 
                     }       //pixel.matrix[i][j].rgb[k]=fgetc(fptr);
                 }
-                median =(median/divider);
-                int medianAux = ceil((double)median);
+                //median =(median);
+                int medianAux = (int)(abs(median));
                 pixelAux.matrix[i][j].rgb[rgb]= medianAux%256;
                 divider=0;
                 median=0;
