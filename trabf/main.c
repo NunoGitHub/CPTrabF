@@ -34,18 +34,21 @@ int main()
     sharpenKernel[0][2]=0;
     char width[3]={0};
     char height[3]={0};
-    //ReadImage("/home/np/Desktop/mestrado/trabf/trabf/1.bmp", &pixels, &width, &height,&bytesPerPixel);
+    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/2.ppm";
 
     FILE *fptr;
-    fptr = fopen("/home/np/Desktop/mestrado/trabf/trabf/2.ppm","r");
+    fptr = fopen(nameFile,"r");
     fseek(fptr, 0, SEEK_END);
     int length = ftell(fptr);
     fseek(fptr, 0, SEEK_SET);
-   // fread(&width, 3, 5, fptr);
+    // fread(&width, 3, 5, fptr);
     fseek(fptr, 3, SEEK_SET);
     fread(width, 4, 1, fptr);
     fseek(fptr, 7, SEEK_SET);
     fread(height, 9, 1, fptr);
+    fclose(fptr);
+    short widthAux= atoi(width);
+    short heightAux = atoi(height);
 
 
     if(fptr == NULL)
@@ -54,13 +57,13 @@ int main()
         //exit(1);
     }
 
-    pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*((int)height+1));
-    for (int i = 0; i < (int)height; i++)
+    pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*(heightAux));
+    for (int i = 0; i < heightAux; i++)
     {
-        pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*((int)width+1));
-        for (int j = 0; j <(int) width; j++){
-            pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*5));
-            for(int k = 0; k < 5; k++){
+        pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*(widthAux));
+        for (int j = 0; j < widthAux; j++){
+            pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*3));
+            for(int k = 0; k < 3; k++){
 
                 pixel.matrix[i][j].bgr[k]=0;
 
@@ -68,51 +71,36 @@ int main()
 
         }
     }
-    fclose(fptr);
+    fptr = fopen(nameFile,"r");
+    unsigned char header[15]={0};
+    fseek(fptr, 0, SEEK_SET);
+    fread(header, 15, 1, fptr);
 
-    unsigned char header[14]={0};
-    for (int h =0;h<14;h++){
-        header[h]=fgetc(fptr);
-    }
-/*
-    int auxKernel[3][3];
-    int cout=0;
 
-    for (int i = 0; i < height; i++)
+    for (int i = 0; i < heightAux; i++)
     {
-        for (int j = 0; j < width; j++){
-             //fseek( fptr, sizeof (byte)*2, SEEK_SET );
-
-            for(int k = 0; k < 5; k++){
-
-
-                pixel.matrix[i][j].bgr[k]=fgetc(fptr);//fgetc(fptr);//fgetc(fptr);//rand() % 256;
-                //pixel.matrix[i][j].bgr[0]=255;
-                //pixel.matrix[i][j].bgr[1]=0;
-               // pixel.matrix[i][j].bgr[2]=255;
-                //printf("%d",pixel.matrix[i][j].bgr[k]);
+        for (int j = 0; j < widthAux; j++){
+            for(int k = 0; k < 3; k++){
+                pixel.matrix[i][j].bgr[k]=fgetc(fptr);
             }
-
-
-
 
         }
     }
     fclose(fptr);
-    int size=  height * width * 4;
-    FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/32bit.bmp", "wb");
-    fwrite(header, 1, 53, fout);
-    unsigned char bmppad[3] = {0,0,0};
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++){
 
-            fwrite( (const void*)pixel.matrix[i][j].bgr, 1, sizeof (byte)*5, fout);
+
+    FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/3.ppm", "wb");
+    fwrite(header, 1, 15, fout);
+    for (int i = 0; i < heightAux; i++)
+    {
+        for (int j = 0; j < widthAux; j++){
+
+            fwrite( (const void*)pixel.matrix[i][j].bgr, 1, sizeof (byte)*3, fout);
 
         }
     }
     fclose(fout);
-*/
+
 
     return 0;
 }
