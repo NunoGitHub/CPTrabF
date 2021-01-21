@@ -22,7 +22,7 @@ typedef struct Matrix Matrix;
 
 struct Pixel{
     Matrix **matrix;
-}pixel;
+}pixel, pixelAux;
 
 
 
@@ -60,14 +60,18 @@ int main()
     }
 
     pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*(heightAux));
+    pixelAux.matrix = (Matrix**)malloc((sizeof (Matrix*))*(heightAux));
     for (int i = 0; i < heightAux; i++)
     {
         pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*(widthAux));
+         pixelAux.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*(widthAux));
         for (int j = 0; j < widthAux; j++){
             pixel.matrix[i][j].rgb = (byte*)malloc((sizeof (byte)*3));
+             pixelAux.matrix[i][j].rgb = (byte*)malloc((sizeof (byte)*3));
             for(int k = 0; k < 3; k++){
 
                 pixel.matrix[i][j].rgb[k]=0;
+                 pixelAux.matrix[i][j].rgb[k]=0;
 
             }
 
@@ -84,11 +88,18 @@ int main()
         for (int j = 0; j < widthAux; j++){
             for(int k = 0; k < 3; k++){
                 pixel.matrix[i][j].rgb[k]=fgetc(fptr);
+                if(i<1)
+                printf("%d ", pixel.matrix[i][j].rgb[k] );
             }
 
+
         }
+        if(i<1)
+        printf("\n\n");
     }
     fclose(fptr);
+
+
     //apply kernel
     float median=0;
     int divider=0;
@@ -113,7 +124,7 @@ int main()
                 }
                 median =(median/divider);
                 int medianAux = ceil((double)median);
-                pixel.matrix[i][j].rgb[rgb]= medianAux%256;
+                pixelAux.matrix[i][j].rgb[rgb]= medianAux%256;
                 divider=0;
                 median=0;
 
@@ -130,7 +141,7 @@ int main()
     {
         for (int j = 0; j < widthAux; j++){
 
-            fwrite( (const void*)pixel.matrix[i][j].rgb, 1, sizeof (byte)*3, fout);
+            fwrite( (const void*)pixelAux.matrix[i][j].rgb, 1, sizeof (byte)*3, fout);
 
         }
     }
