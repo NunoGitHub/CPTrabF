@@ -32,7 +32,7 @@ int main()
     sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=-5;sharpenKernel[1][2]=-1;
     sharpenKernel[0][1]= -1;sharpenKernel[2][0]=0;sharpenKernel[2][1]=-1;sharpenKernel[2][2]=0;
     sharpenKernel[0][2]=0;
-    char width[3]={0};
+    char *width= (char*)malloc(sizeof (char));
     char height[3]={0};
     const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/2.ppm";
 
@@ -45,10 +45,12 @@ int main()
     fseek(fptr, 3, SEEK_SET);
     fread(width, 4, 1, fptr);
     fseek(fptr, 7, SEEK_SET);
-    fread(height, 9, 1, fptr);
+    fread(height, 8, 1, fptr);
     fclose(fptr);
-    short widthAux= atoi(width);
+
+    short widthAux=atoi(width);
     short heightAux = atoi(height);
+
 
 
     if(fptr == NULL)
