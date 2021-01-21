@@ -102,7 +102,7 @@ int main()
 
 
     //apply kernel
-    float median=0;
+    float weightedSum=0;
     int divider=0;
     int r=0;
     for (int i = 0; i < heightAux; i++)
@@ -119,15 +119,16 @@ int main()
                         if(j+kY<0) kY=0;
                         if(j+kY>= widthAux) break;
                         divider++;
-                        median+= (pixel.matrix[i+kX][j+kY].rgb[rgb]*sharpenKernel[kX+1][kY+1]);
+                        weightedSum+= (pixel.matrix[i+kX][j+kY].rgb[rgb]*sharpenKernel[kX+1][kY+1]);
 
-                    }       //pixel.matrix[i][j].rgb[k]=fgetc(fptr);
+                    }
                 }
-                //median =(median);
-                int medianAux = (int)(abs(median));
-                pixelAux.matrix[i][j].rgb[rgb]= medianAux%256;
+                if(divider<=8)weightedSum=weightedSum*0.5;
+
+                int weightedSumAux = (int)(abs(weightedSum));
+                pixelAux.matrix[i][j].rgb[rgb]= weightedSumAux%256;
                 divider=0;
-                median=0;
+                weightedSum=0;
 
             }
 
