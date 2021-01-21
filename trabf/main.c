@@ -16,7 +16,7 @@ typedef unsigned int int32;
 typedef short int16;
 typedef unsigned char byte;
 struct Matrix{
-    byte *bgr;
+    byte *rgb;
 };
 typedef struct Matrix Matrix;
 
@@ -62,10 +62,10 @@ int main()
     {
         pixel.matrix[i] = (Matrix*)malloc((sizeof (Matrix))*(widthAux));
         for (int j = 0; j < widthAux; j++){
-            pixel.matrix[i][j].bgr = (byte*)malloc((sizeof (byte)*3));
+            pixel.matrix[i][j].rgb = (byte*)malloc((sizeof (byte)*3));
             for(int k = 0; k < 3; k++){
 
-                pixel.matrix[i][j].bgr[k]=0;
+                pixel.matrix[i][j].rgb[k]=0;
 
             }
 
@@ -81,7 +81,7 @@ int main()
     {
         for (int j = 0; j < widthAux; j++){
             for(int k = 0; k < 3; k++){
-                pixel.matrix[i][j].bgr[k]=fgetc(fptr);
+                pixel.matrix[i][j].rgb[k]=fgetc(fptr);
             }
 
         }
@@ -95,7 +95,7 @@ int main()
     {
         for (int j = 0; j < widthAux; j++){
 
-            fwrite( (const void*)pixel.matrix[i][j].bgr, 1, sizeof (byte)*3, fout);
+            fwrite( (const void*)pixel.matrix[i][j].rgb, 1, sizeof (byte)*3, fout);
 
         }
     }
