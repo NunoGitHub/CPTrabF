@@ -132,3 +132,13 @@ int main()
 
     return 0;
 }
+
+median += pixel.matrix[i][j].rgb[0];
+median += pixel.matrix[i][j].rgb[1];
+median += pixel.matrix[i][j].rgb[2];
+median =(median/3);
+median = ceil((double)median);
+median = ((int)median)%256;
+pixel.matrix[i][j].rgb[0]=median;
+pixel.matrix[i][j].rgb[1]=median;
+pixel.matrix[i][j].rgb[2]=median;

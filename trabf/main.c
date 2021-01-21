@@ -29,12 +29,12 @@ struct Pixel{
 int main()
 {
     int sharpenKernel[3][3];
-    sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=-5;sharpenKernel[1][2]=-1;
+    sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=5;sharpenKernel[1][2]=-1;
     sharpenKernel[0][1]= -1;sharpenKernel[2][0]=0;sharpenKernel[2][1]=-1;sharpenKernel[2][2]=0;
     sharpenKernel[0][2]=0;
     char *width= (char*)malloc(sizeof (char));
     char height[3]={0};
-    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/2.ppm";
+    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/teste3.ppm";
 
     FILE *fptr;
     fptr = fopen(nameFile,"r");
@@ -89,6 +89,39 @@ int main()
         }
     }
     fclose(fptr);
+    //apply kernel
+    float median=0;
+    int divider=0;
+    int r=0;
+    for (int i = 0; i < heightAux; i++)
+    {
+        for (int j = 0; j < widthAux; j++){
+
+
+            for(int rgb = 0; rgb < 3; rgb++){
+
+                for (int kX=-1; kX<2;kX++){
+                    for (int kY=-1; kY<2;kY++){
+                        if ((i+kX)<0) kX=0;
+                        if((i+kX)>=heightAux)break;
+                        if(j+kY<0) kY=0;
+                        if(j+kY>= widthAux) break;
+                        divider++;
+                        median+= abs(pixel.matrix[i+kX][j+kY].rgb[rgb]*sharpenKernel[kX+1][kY+1]);
+
+                    }       //pixel.matrix[i][j].rgb[k]=fgetc(fptr);
+                }
+                median =(median/divider);
+                int medianAux = ceil((double)median);
+                pixel.matrix[i][j].rgb[rgb]= medianAux%256;
+                divider=0;
+                median=0;
+
+            }
+
+
+        }
+    }
 
 
     FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/3.ppm", "wb");
