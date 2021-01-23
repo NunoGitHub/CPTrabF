@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
+
 
 #define DATA_OFFSET_OFFSET 0x000A
 #define WIDTH_OFFSET 0x0032
@@ -26,18 +28,52 @@ struct Pixel{
 }pixel, pixelAux;
 
 
+void hd(FILE*,const char*,char*, char*);
+void matrizes(short,short);
+void PreenchePixeis(FILE*,const char*,short,short,unsigned char*);
+void Kernel(int [3][3],short,short);
+void EscreveFicheiro(const char*,short,short);
 
 int main()
 {
+    double wtime;
+
     int sharpenKernel[3][3];
-    sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=5;sharpenKernel[1][2]=-1;
-    sharpenKernel[0][1]= -1;sharpenKernel[2][0]=0;sharpenKernel[2][1]=-1;sharpenKernel[2][2]=0;
-    sharpenKernel[0][2]=0;
     char *width= (char*)malloc(sizeof (char));
     char height[3]={0};
-    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/teste3.ppm";
-
     FILE *fptr;
+    const char* nameFile= "/home/rui/Desktop/TP/CPTrabF/trabf/2.ppm";
+    short widthAux;
+    short heightAux;
+    unsigned char header[15]={0};
+
+    printf("%d\t%d\n",*width,*height);
+    hd(fptr,&nameFile[0],width,&height[0]);
+    printf("%d\t%d\n",*width,*height);
+
+    widthAux=atoi(width);
+    heightAux = atoi(height);
+
+    matrizes(heightAux,widthAux);
+    PreenchePixeis(fptr,nameFile,heightAux,widthAux,header);
+
+    wtime = omp_get_wtime();
+    Kernel(&sharpenKernel[0][0],heightAux,widthAux);
+    wtime = omp_get_wtime() - wtime;
+
+    EscreveFicheiro(&header[0],heightAux,widthAux);
+
+    printf("\nTime:%f\n",wtime);
+    return 0;
+}
+
+
+
+    void hd(FILE *fptr,const char* nameFile,char *width,char* height)
+    {
+
+
+
     fptr = fopen(nameFile,"r");
     fseek(fptr, 0, SEEK_END);
     int length = ftell(fptr);
@@ -49,8 +85,7 @@ int main()
     fread(height, 8, 1, fptr);
     fclose(fptr);
 
-    short widthAux=atoi(width);
-    short heightAux = atoi(height);
+
 
 
 
@@ -59,6 +94,10 @@ int main()
         printf("Error!");
         //exit(1);
     }
+    }
+
+    void matrizes(short heightAux,short widthAux)
+    {
 
     pixel.matrix = (Matrix**)malloc((sizeof (Matrix*))*(heightAux));
     pixelAux.matrix = (Matrix**)malloc((sizeof (Matrix*))*(heightAux));
@@ -78,8 +117,12 @@ int main()
 
         }
     }
+    }
+
+    void PreenchePixeis(FILE *fptr,const char *nameFile,short heightAux,short widthAux, unsigned char* header)
+    {
     fptr = fopen(nameFile,"r");
-    unsigned char header[15]={0};
+
     fseek(fptr, 0, SEEK_SET);
     fread(header, 15, 1, fptr);
 
@@ -89,22 +132,31 @@ int main()
         for (int j = 0; j < widthAux; j++){
             for(int k = 0; k < 3; k++){
                 pixel.matrix[i][j].rgb[k]=fgetc(fptr);
-                if(i<1)
-                printf("%d ", pixel.matrix[i][j].rgb[k] );
+
             }
 
 
         }
-        if(i<1)
-        printf("\n\n");
+
     }
     fclose(fptr);
+    }
+
+void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
+{
+    sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=5;sharpenKernel[1][2]=-1;
+    sharpenKernel[0][1]= -1;sharpenKernel[2][0]=0;sharpenKernel[2][1]=-1;sharpenKernel[2][2]=0;
+    sharpenKernel[0][2]=0;
 
 
     //apply kernel
     float weightedSum=0;
     int divider=0;
     int r=0;
+
+
+    //omp_set_num_threads(4);
+    //#pragma omp parallel for
     for (int i = 0; i < heightAux; i++)
     {
         for (int j = 0; j < widthAux; j++){
@@ -135,9 +187,11 @@ int main()
 
         }
     }
+}
 
-
-    FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/3.ppm", "wb");
+void EscreveFicheiro(const char *header, short heightAux,short widthAux)
+{
+    FILE *fout = fopen("/home/rui/Desktop/TP/CPTrabF/trabf/novoteste2.ppm", "wb");
     fwrite(header, 1, 15, fout);
     for (int i = 0; i < heightAux; i++)
     {
@@ -148,7 +202,9 @@ int main()
         }
     }
     fclose(fout);
-
-
-    return 0;
 }
+
+
+
+
+
