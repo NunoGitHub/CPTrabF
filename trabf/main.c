@@ -5,16 +5,6 @@
 #include <omp.h>
 
 
-#define DATA_OFFSET_OFFSET 0x000A
-#define WIDTH_OFFSET 0x0032
-#define HEIGHT_OFFSET 0x0016
-#define BITS_PER_PIXEL_OFFSET 0x001C
-#define HEADER_SIZE 14
-#define INFO_HEADER_SIZE 40
-#define NO_COMPRESION 0
-#define MAX_NUMBER_OF_COLORS 0
-#define ALL_COLORS_REQUIRED 0
-
 typedef unsigned int int32;
 typedef short int16;
 typedef unsigned char byte;
@@ -33,6 +23,7 @@ void matrizes(short,short);
 void PreenchePixeis(FILE*,const char*,short,short,unsigned char*);
 void Kernel(int [3][3],short,short);
 void EscreveFicheiro(const char*,short,short);
+static int headerLenght=0;
 
 int main()
 {
@@ -42,10 +33,26 @@ int main()
     char *width= (char*)malloc(sizeof (char));
     char height[3]={0};
     FILE *fptr;
-    const char* nameFile= "/home/rui/Desktop/TP/CPTrabF/trabf/2.ppm";
+    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/4k.ppm";
     short widthAux;
     short heightAux;
-    unsigned char header[15]={0};
+    unsigned char* header= (unsigned char*)(malloc(sizeof (byte)*20));
+    fptr = fopen(nameFile,"r");
+    int count=0;
+    header[0]="";
+    int auxCount=0;
+    while((int)header[0]!=56 && auxCount!=3 ){
+          header[count]=fgetc(fptr);
+
+          if((byte)header[count]==10){
+              auxCount++;}
+          count++;
+          headerLenght++;
+    }
+
+
+    fseek(fptr, 0, SEEK_SET);
+    fread(header, 15, 1, fptr);
 
     printf("%d\t%d\n",*width,*height);
     hd(fptr,&nameFile[0],width,&height[0]);
@@ -85,10 +92,6 @@ int main()
     fread(height, 8, 1, fptr);
     fclose(fptr);
 
-
-
-
-
     if(fptr == NULL)
     {
         printf("Error!");
@@ -121,10 +124,11 @@ int main()
 
     void PreenchePixeis(FILE *fptr,const char *nameFile,short heightAux,short widthAux, unsigned char* header)
     {
-    fptr = fopen(nameFile,"r");
 
+    fptr = fopen(nameFile,"r");
+    byte headerAux[20];
     fseek(fptr, 0, SEEK_SET);
-    fread(header, 15, 1, fptr);
+    fread(headerAux, headerLenght, 1, fptr);
 
 
     for (int i = 0; i < heightAux; i++)
@@ -191,8 +195,8 @@ void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
 
 void EscreveFicheiro(const char *header, short heightAux,short widthAux)
 {
-    FILE *fout = fopen("/home/rui/Desktop/TP/CPTrabF/trabf/novoteste2.ppm", "wb");
-    fwrite(header, 1, 15, fout);
+    FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/3.ppm", "wb");
+    fwrite(header, 1, headerLenght, fout);
     for (int i = 0; i < heightAux; i++)
     {
         for (int j = 0; j < widthAux; j++){
