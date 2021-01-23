@@ -9,5 +9,6 @@ SOURCES += \
 
 DISTFILES += \
     save.txt \
+    save2 \
     teste \
     teste2
