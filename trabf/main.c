@@ -42,18 +42,14 @@ int main()
     header[0]="";
     int auxCount=0;
     //obter o header e o seu tamanho
-    while((int)header[0]!=56 && auxCount!=3 ){
+    while(header[0]!=56 && auxCount!=3 ){
         header[count]=fgetc(fptr);
-
-        if((byte)header[count]==10) auxCount++;
+        if(header[count]==10) auxCount++;
         count++;
        headerLenght=count;
     }
 
-
-    printf("%d\t%d\n",*width,*height);
     hd(fptr,&nameFile[0],width,&height[0]);
-    printf("%d\t%d\n",*width,*height);
 
     widthAux=atoi(width);
     heightAux = atoi(height);
@@ -72,7 +68,7 @@ int main()
 }
 
 
-
+//obter a altura e largura das imagens
 void hd(FILE *fptr,const char* nameFile,char *width,char* height)
 {
     fptr = fopen(nameFile,"r");
@@ -88,7 +84,7 @@ void hd(FILE *fptr,const char* nameFile,char *width,char* height)
         //exit(1);
     }
 }
-
+//fazer a alocação da memoria para as estruturas
 void matrizes(short heightAux,short widthAux)
 {
 
@@ -111,7 +107,7 @@ void matrizes(short heightAux,short widthAux)
         }
     }
 }
-
+//copiar os pixeis da imagem para a estrutura pixel
 void PreenchePixeis(FILE *fptr,const char *nameFile,short heightAux,short widthAux, unsigned char* header)
 {
 
@@ -139,8 +135,8 @@ void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
     sharpenKernel[0][2]=0;
 
     float weightedSum=0;
+//percorrer a estrutura dos pixeis e por cada rgb fazer a multiplicação pelo sharpen kernel em cada posição
 //#pragma omp parallel  num_threads(4)
-
     for (int i = 2; i < heightAux; i++)
     {
 
@@ -165,7 +161,7 @@ void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
         if((i+3)>=heightAux)i=heightAux;
     }
 }
-
+//criar uma nova imagem com os pixeis resultantes da computação do kernel
 void EscreveFicheiro(const char *header, short heightAux,short widthAux)
 {
     FILE *fout = fopen("/home/np/Desktop/mestrado/trabf/trabf/3.ppm", "wb");
