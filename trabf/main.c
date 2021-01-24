@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
+#include <string.h>
 
 
 typedef unsigned int int32;
@@ -39,15 +40,19 @@ int main()
     unsigned char* header= (unsigned char*)(malloc(sizeof (byte)*78));
     fptr = fopen(nameFile,"r");
     int count=0;
-    header[0]="";
     int auxCount=0;
+    byte auxHeader [78]={0};
+
     //obter o header e o seu tamanho
     while(auxCount!=3 ){
-        header[count]=fgetc(fptr);
-        if(header[count]==10) auxCount++;
+        //header[count]=fgetc(fptr);
+        auxHeader[count]=fgetc(fptr);
+        if(auxHeader[count]==10) auxCount++;
         count++;
        headerLenght=count;
     }
+    auxHeader[headerLenght+1]=NULL;
+    memcpy(header,auxHeader,sizeof (unsigned char*)*headerLenght);
 
     hd(fptr,&nameFile[0],width,&height[0]);
 
@@ -64,7 +69,7 @@ int main()
     EscreveFicheiro(&header[0],heightAux,widthAux);
 
     printf("\nTime:%f\n",wtime);
-    exit(0);
+    return 0;
 }
 
 
