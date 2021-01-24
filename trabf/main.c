@@ -34,7 +34,7 @@ int main()
     char *width= (char*)malloc(sizeof (char));
     char height[3]={0};
     FILE *fptr;
-    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/4k_3.ppm";
+    const char* nameFile= "/home/np/Desktop/mestrado/trabf/trabf/teste3.ppm";
     short widthAux;
     short heightAux;
     unsigned char* header= (unsigned char*)(malloc(sizeof (byte)*78));
@@ -127,12 +127,13 @@ void PreenchePixeis(FILE *fptr,const char *nameFile,short heightAux,short widthA
         for (int j = 0; j < widthAux; j++){
             for(int k = 0; k < 3; k++){
                 pixel.matrix[i][j].rgb[k]=fgetc(fptr);
+                pixelAux.matrix[i][j].rgb[k]=pixel.matrix[i][j].rgb[k];
             }
         }
     }
     fclose(fptr);
 }
-
+// aplicação do kernel na imagem
 void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
 {
     sharpenKernel[0][0]=0; sharpenKernel[1][0]=-1;sharpenKernel[1][1]=5;sharpenKernel[1][2]=-1;
@@ -140,16 +141,9 @@ void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
     sharpenKernel[0][2]=0;
 
     float weightedSum=0;
-//percorrer a estrutura dos pixeis e por cada rgb fazer a multiplicação pelo sharpen kernel em cada posição
-//#pragma omp parallel  num_threads(4)
     for (int i = 2; i < heightAux; i++)
     {
-
         for (int j = 2; j < widthAux; j++){
-//#pragma omp for private(weightedSum)
-//  #pragma omp for reduction(+:weightedSum)
-            //#pragma omp for firstprivate(weightedSum)
-            //#pragma omp for lastprivate(weightedSum)
             for(int rgb = 0; rgb < 3; rgb++){
 
                 for (int kX=-1; kX<2;kX++){
