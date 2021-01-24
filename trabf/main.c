@@ -42,7 +42,7 @@ int main()
     header[0]="";
     int auxCount=0;
     //obter o header e o seu tamanho
-    while(header[0]!=56 && auxCount!=3 ){
+    while(auxCount!=3 ){
         header[count]=fgetc(fptr);
         if(header[count]==10) auxCount++;
         count++;
@@ -64,7 +64,7 @@ int main()
     EscreveFicheiro(&header[0],heightAux,widthAux);
 
     printf("\nTime:%f\n",wtime);
-    return 0;
+    exit(0);
 }
 
 
