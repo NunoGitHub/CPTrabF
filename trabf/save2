@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
-
+//gcc main.c -o main -Wno-unknown-pragmas -fopenmp -std=c99
 
 typedef unsigned int int32;
 typedef short int16;
