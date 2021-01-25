@@ -45,7 +45,6 @@ int main()
 
     //obter o header e o seu tamanho
     while(auxCount!=3 ){
-        //header[count]=fgetc(fptr);
         auxHeader[count]=fgetc(fptr);
         if(auxHeader[count]==10) auxCount++;
         count++;
@@ -141,9 +140,9 @@ void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
     sharpenKernel[0][2]=0;
 
     float weightedSum=0;
-    for (int i = 2; i < heightAux; i++)
+    for (int i = 1; i < heightAux; i++)
     {
-        for (int j = 2; j < widthAux; j++){
+        for (int j = 1; j < widthAux; j++){
             for(int rgb = 0; rgb < 3; rgb++){
 
                 for (int kX=-1; kX<2;kX++){
@@ -155,9 +154,9 @@ void Kernel(int sharpenKernel[3][3], short heightAux,short widthAux)
                 pixelAux.matrix[i][j].rgb[rgb]= weightedSumAux%256;
                 weightedSum=0;
             }
-            if(j+3>= widthAux) j=widthAux;
+            if((j+2)>= widthAux)j=widthAux;
         }
-        if((i+3)>=heightAux)i=heightAux;
+        if((i+2)>=heightAux)i=heightAux;
     }
 }
 //criar uma nova imagem com os pixeis resultantes da computação do kernel
